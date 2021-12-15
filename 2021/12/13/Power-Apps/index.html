@@ -1,0 +1,454 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Reinhardt Feng">
+  <meta name="keywords" content="">
+  <meta name="description" content="Power Apps 使用感想2021年4月因为工作变动，开始使用微软推出的一个低代码开发工具Power Apps,这里分析一下它的优缺点以及我的使用心得。 什么是Power Platform？Power Platform由Power BI， PowerApps， Power Automate 与 Power Virtual Agents组成。微软一直在不断地将其作为一个整体来推广。这几项服务为管">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Power Apps使用感想">
+<meta property="og:url" content="https://f463053953.github.io/2021/12/13/Power-Apps/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="Power Apps 使用感想2021年4月因为工作变动，开始使用微软推出的一个低代码开发工具Power Apps,这里分析一下它的优缺点以及我的使用心得。 什么是Power Platform？Power Platform由Power BI， PowerApps， Power Automate 与 Power Virtual Agents组成。微软一直在不断地将其作为一个整体来推广。这几项服务为管">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://f463053953.github.io/2021/12/13/Power-Apps/Power-Apps%E4%BD%BF%E7%94%A8%E6%84%9F%E6%83%B3/Power_Apps.jpg">
+<meta property="article:published_time" content="2021-12-13T10:14:24.000Z">
+<meta property="article:modified_time" content="2021-12-15T08:49:07.657Z">
+<meta property="article:author" content="Reinhardt Feng">
+<meta property="article:tag" content="Study notes">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://f463053953.github.io/2021/12/13/Power-Apps/Power-Apps%E4%BD%BF%E7%94%A8%E6%84%9F%E6%83%B3/Power_Apps.jpg">
+  
+  <title>Power Apps使用感想 - 我的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"f463053953.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Reinhardt Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Power Apps使用感想">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-12-13 18:14" pubdate>
+        December 13, 2021 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      902 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      3 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Power Apps使用感想</h1>
+            
+            <div class="markdown-body">
+              <h1 id="Power-Apps-使用感想"><a href="#Power-Apps-使用感想" class="headerlink" title="Power Apps 使用感想"></a>Power Apps 使用感想</h1><p>2021年4月因为工作变动，开始使用微软推出的一个低代码开发工具Power Apps,这里分析一下它的优缺点以及我的使用心得。</p>
+<h3 id="什么是Power-Platform？"><a href="#什么是Power-Platform？" class="headerlink" title="什么是Power Platform？"></a>什么是Power Platform？</h3><p>Power Platform由Power BI， PowerApps， Power Automate 与 Power Virtual Agents组成。微软一直在不断地将其作为一个整体来推广。这几项服务为管理我们的数字世界提供了工具，在这个世界中，数据为王，是任何企业流程的基础。它们的应用如下：</p>
+<ol>
+<li>您可以使用Power BI显示和分析数据。</li>
+<li>您可以使用PowerApps操作和修改数据。</li>
+<li>您可以使用Power Automate自动执行数据。</li>
+</ol>
+<h3 id="如何使用Microsoft-PowerApps构建应用程序"><a href="#如何使用Microsoft-PowerApps构建应用程序" class="headerlink" title="如何使用Microsoft PowerApps构建应用程序"></a>如何使用Microsoft PowerApps构建应用程序</h3><p>您可以在PowerApps中使用四种工具或环境，它们各自具有自己的功能和角色。</p>
+<p>PowerApps网站</p>
+<p>该网站是您开始PowerApps服务之旅的地方。在这里，您可以创建新应用并管理现有应用。<br><img src="Power-Apps%E4%BD%BF%E7%94%A8%E6%84%9F%E6%83%B3/Power_Apps.jpg" srcset="/img/loading.gif" lazyload alt="Power_Apps"></p>
+<h3 id="选择PowerApps应用程序类型"><a href="#选择PowerApps应用程序类型" class="headerlink" title="选择PowerApps应用程序类型"></a>选择PowerApps应用程序类型</h3><p>PowerApps创建两种主要类型的应用程序：</p>
+<ol>
+<li>画布应用(Canvas)</li>
+<li>模型驱动应用(Model-driven)</li>
+</ol>
+<p>画布应用（Canvas）应用程序使您可以通过将控件和字段定位在“完美像素”pixel-perfect”的用户体验中来自由，轻松地组织界面。这里的主要重点是将您的业务知识和创造力带入应用程序的设计中。 Canvas应用程序的目标是轻量级应用程序，这意味着我们甚至可以在几分钟内进行设计和使用。</p>
+<p>模型驱动的应用程序建立在通用数据服务（新名字为：Microsoft Dataflex Pro）的基础上，该通用数据服务用于帮助快速构建表单，流程和业务规则。他们适合用于【长时间使用】（一次多个小时）的非轻便应用程序。</p>
+<p>使用Model-driven App时，会为您确定大量的布局，并且大部分由您添加到应用程序中的Component指定。相比之下，设计人员可以完全控制canvas应用程序开发中的应用程序布局。</p>
+<p>Power Apps 数据源这部分有很多的坑，我们放到之后来详细解释</p>
+<p>相关链接：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://powerbi.microsoft.com/">Power BI</a></li>
+<li><a target="_blank" rel="noopener" href="https://powerapps.microsoft.com/en-us/">Power Apps</a></li>
+<li><a target="_blank" rel="noopener" href="https://powerautomate.microsoft.com/zh-cn/">Power Automate</a></li>
+</ol>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Study-notes/">Study notes</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
