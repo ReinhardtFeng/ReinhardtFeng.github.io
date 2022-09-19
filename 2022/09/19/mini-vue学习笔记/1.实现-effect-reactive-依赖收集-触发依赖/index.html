@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="description" content="">
+  <meta name="author" content="Reinhardt Feng">
+  <meta name="keywords" content="">
+  <meta name="description" content="实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖在本小节呢，我们将实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖 1. 编写单元测试我们先建一个单元测试： 12345678910111213141516describe(&quot;effect&quot;, () &#x3D;&gt; &amp;#123;  it(&amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖">
+<meta property="og:url" content="https://reinhardtfeng.github.io/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.%E5%AE%9E%E7%8E%B0-effect-reactive-%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86-%E8%A7%A6%E5%8F%91%E4%BE%9D%E8%B5%96/index.html">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖在本小节呢，我们将实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖 1. 编写单元测试我们先建一个单元测试： 12345678910111213141516describe(&quot;effect&quot;, () &#x3D;&gt; &amp;#123;  it(&amp;quot">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-09-19T10:53:23.000Z">
+<meta property="article:modified_time" content="2022-09-19T11:28:41.632Z">
+<meta property="article:author" content="Reinhardt Feng">
+<meta property="article:tag" content="mini-vue">
+<meta name="twitter:card" content="summary_large_image">
+  
+  <title>1.实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖 - 我的博客</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_kmeydafke9r.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"reinhardtfeng.github.io","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Reinhardt Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="1.实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-09-19 18:53" pubdate>
+        September 19, 2022 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">1.实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖</h1>
+            
+            <div class="markdown-body">
+              <h1 id="实现-effect-amp-reactive-amp-依赖收集-amp-触发依赖"><a href="#实现-effect-amp-reactive-amp-依赖收集-amp-触发依赖" class="headerlink" title="实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖"></a>实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖</h1><p>在本小节呢，我们将实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖</p>
+<h2 id="1-编写单元测试"><a href="#1-编写单元测试" class="headerlink" title="1. 编写单元测试"></a>1. 编写单元测试</h2><p>我们先建一个单元测试：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">describe</span>(<span class="hljs-string">&quot;effect&quot;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-title function_">it</span>(<span class="hljs-string">&quot;happy path&quot;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> user = <span class="hljs-title function_">reactive</span>(&#123;<br>      <span class="hljs-attr">age</span>: <span class="hljs-number">10</span>,<br>    &#125;);<br>    <span class="hljs-keyword">let</span> nextAge;<br>    <span class="hljs-title function_">effect</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      nextAge = user.<span class="hljs-property">age</span> + <span class="hljs-number">1</span>;<br>    &#125;);<br>    <span class="hljs-title function_">expect</span>(nextAge).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">11</span>);<br><br>    <span class="hljs-comment">// update</span><br>    user.<span class="hljs-property">age</span>++;<br>    <span class="hljs-title function_">expect</span>(nextAge).<span class="hljs-title function_">toBe</span>(<span class="hljs-number">12</span>);<br>  &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>以上的单元测试，就是本文中重点需要通过的测试。在此之前，我们可以先去写一个 reactive API</p>
+<h2 id="2-reactive-实现"><a href="#2-reactive-实现" class="headerlink" title="2. reactive 实现"></a>2. reactive 实现</h2><h3 id="2-1-编写一个单元测试"><a href="#2-1-编写一个单元测试" class="headerlink" title="2.1 编写一个单元测试"></a>2.1 编写一个单元测试</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 编写 reactive 的 happy path</span><br><span class="hljs-title function_">describe</span>(<span class="hljs-string">&quot;reactive&quot;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-title function_">it</span>(<span class="hljs-string">&quot;happy path&quot;</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>    <span class="hljs-keyword">const</span> original = &#123; <span class="hljs-attr">foo</span>: <span class="hljs-number">1</span> &#125;;<br>    <span class="hljs-keyword">const</span> observed = <span class="hljs-title function_">reactive</span>(original);<br>    <span class="hljs-comment">// 期望包装后和源对象不一样</span><br>    <span class="hljs-title function_">expect</span>(observed).<span class="hljs-property">not</span>.<span class="hljs-title function_">toBe</span>(original);<br>    <span class="hljs-comment">// 期望包装后某个属性的值和源对象一样</span><br>    <span class="hljs-title function_">expect</span>(observed.<span class="hljs-property">foo</span>).<span class="hljs-title function_">toBe</span>(original.<span class="hljs-property">foo</span>);<br>  &#125;);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>那该如何实现呢？在这里我们就可以使用 Proxy + Reflect 来实现了</p>
+<h3 id="2-2-实现"><a href="#2-2-实现" class="headerlink" title="2.2 实现"></a>2.2 实现</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 可以使用简单的 Proxy 来实现</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">reactive</span>(<span class="hljs-params">raw</span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(raw, &#123;<br>    <span class="hljs-title function_">get</span>(<span class="hljs-params">target, key, receiver</span>) &#123;<br>      <span class="hljs-keyword">const</span> res = <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">get</span>(target, key, receiver);<br>      <span class="hljs-keyword">return</span> res;<br>    &#125;,<br>    <span class="hljs-title function_">set</span>(<span class="hljs-params">target, key, value, receiver</span>) &#123;<br>      <span class="hljs-keyword">const</span> res = <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">set</span>(target, key, value, receiver);<br>      <span class="hljs-keyword">return</span> res;<br>    &#125;,<br>  &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>运行一下 happy path，通过</p>
+<h2 id="3-effect-实现"><a href="#3-effect-实现" class="headerlink" title="3. effect 实现"></a>3. effect 实现</h2><p>下面，我们就回过头来看看最开始的单元测试，此时我们已经有了 reactive，接下来就是去实现一个 effect API。</p>
+<h3 id="3-1-v1-版本"><a href="#3-1-v1-版本" class="headerlink" title="3.1 v1 版本"></a>3.1 v1 版本</h3><p>首先，我们知道了 effect 接受一个参数，可以通过抽象一层：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ReactiveEffect</span> &#123;<br>  private <span class="hljs-attr">_fn</span>: any<br>  <span class="hljs-title function_">constructor</span>(<span class="hljs-params">fn</span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-property">_fn</span> = fn<br>  &#125;<br>  <span class="hljs-title function_">run</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_fn</span>()<br>  &#125;<br>&#125;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">effect</span>(<span class="hljs-params">fn</span>) &#123;<br>  <span class="hljs-comment">// 抽象一层</span><br>  <span class="hljs-keyword">const</span> _effect = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReactiveEffect</span>(fn)<br>  <span class="hljs-comment">// 去调用方法</span><br>  _effect.<span class="hljs-title function_">run</span>()<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>此时我们 update 之前的逻辑就可以跑通了，下面的难点在于 update</p>
+<h3 id="3-2-v2-版本"><a href="#3-2-v2-版本" class="headerlink" title="3.2 v2 版本"></a>3.2 v2 版本</h3><p>这个版本，我们主要是用于解决 update 的问题，我们来看看测试，发现在 get 操作的时候需要将依赖收集，在 set 操作的时候再去触发这个依赖，下面我们就可以手动在 reactive 中添加相应的逻辑</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">reactive</span>(<span class="hljs-params">raw</span>) &#123;<br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(raw, &#123;<br>    <span class="hljs-title function_">get</span>(<span class="hljs-params">target, key, receiver</span>) &#123;<br>      <span class="hljs-keyword">const</span> res = <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">get</span>(target, key, receiver);<br>      <span class="hljs-comment">// 在 get 时收集依赖</span><br>      <span class="hljs-title function_">track</span>(target, key);<br>      <span class="hljs-keyword">return</span> res;<br>    &#125;,<br>    <span class="hljs-title function_">set</span>(<span class="hljs-params">target, key, value, receiver</span>) &#123;<br>      <span class="hljs-keyword">const</span> res = <span class="hljs-title class_">Reflect</span>.<span class="hljs-title function_">set</span>(target, key, value, receiver);<br>      <span class="hljs-comment">// 在 set 时触发依赖</span><br>      <span class="hljs-title function_">trigger</span>(target, key);<br>      <span class="hljs-keyword">return</span> res;<br>    &#125;,<br>  &#125;);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>下面，我们就去编写一个 track 和 trigger</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// track 相关代码</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ReactiveEffect</span> &#123;<br>  <span class="hljs-comment">// ...</span><br>  <span class="hljs-title function_">run</span>(<span class="hljs-params"></span>) &#123;<br>    <span class="hljs-comment">// 保存一下当前的 activeEffect</span><br>    activeEffect = <span class="hljs-variable language_">this</span>;<br>    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">_fn</span>();<br>  &#125;<br>&#125;<br><br><span class="hljs-comment">// 创建全局变量 targetMap</span><br><span class="hljs-keyword">const</span> targetMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WeakMap</span>();<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">track</span>(<span class="hljs-params">target, key</span>) &#123;<br>  <span class="hljs-comment">// 我们在运行时，可能会创建多个 target，每个 target 还会可能有多个 key，每个 key 又关联着多个 effectFn</span><br>  <span class="hljs-comment">// 而且 target -&gt; key -&gt; effectFn，这三者是树形的关系</span><br>  <span class="hljs-comment">// 因此就可以创建一个 WeakMap 用于保存 target，取出来就是每个 key 对应这一个 depsMap，而每个 depsMap 又是一个 Set</span><br>  <span class="hljs-comment">// 数据结构（避免保存重复的 effect）</span><br>  <span class="hljs-keyword">let</span> depsMap = targetMap.<span class="hljs-title function_">get</span>(target);<br>  <span class="hljs-keyword">if</span> (!depsMap) &#123;<br>    depsMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Map</span>();<br>    targetMap.<span class="hljs-title function_">set</span>(target, depsMap);<br>  &#125;<br>  <span class="hljs-keyword">let</span> dep = depsMap.<span class="hljs-title function_">get</span>(key);<br>  <span class="hljs-keyword">if</span> (!dep) &#123;<br>    dep = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Set</span>();<br>    depsMap.<span class="hljs-title function_">set</span>(key, dep);<br>  &#125;<br>  <span class="hljs-comment">// 将 effect 加入到 set 中</span><br>  dep.<span class="hljs-title function_">add</span>(activeEffect);<br>&#125;<br><br><span class="hljs-comment">// 需要一个全局变量来保存当前的 effect</span><br><span class="hljs-keyword">let</span> activeEffect;<br><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">effect</span>(<span class="hljs-params">fn</span>) &#123;<br>  <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>下面是 trigger</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">trigger</span>(<span class="hljs-params">target, key</span>) &#123;<br>  <span class="hljs-comment">// trigger 的逻辑就更加简单了，我们只需要取出对应的 deps 这个 set，再遍历执行每个 effect 就可以了</span><br>  <span class="hljs-keyword">const</span> depsMap = targetMap.<span class="hljs-title function_">get</span>(target);<br>  <span class="hljs-keyword">const</span> deps = depsMap.<span class="hljs-title function_">get</span>(key);<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> effect <span class="hljs-keyword">of</span> deps) &#123;<br>    effect.<span class="hljs-title function_">run</span>();<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>现在我们再跑测试，就发现通过了，现在我们已经实现了 effect、reactive 的 happy path 了</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/mini-vue/">mini-vue</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/0.%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">0.环境初始化</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/03/02/ES6-Study/ES6-Study/">
+                        <span class="hidden-mobile">ES6 Study</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+      typing(title)
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

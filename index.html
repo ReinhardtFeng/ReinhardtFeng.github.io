@@ -190,13 +190,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
+        <a href="/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/0.%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
           0.环境初始化
         </a>
       </h1>
 
       <p class="index-excerpt">
-        <a href="/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
+        <a href="/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/0.%E7%8E%AF%E5%A2%83%E5%88%9D%E5%A7%8B%E5%8C%96/" target="_self">
           
           
             
@@ -223,7 +223,7 @@
           <div class="post-meta mr-3">
             <i class="iconfont icon-category"></i>
             
-              <a href="/categories/Diary/">Diary</a>
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
             
           </div>
         
@@ -231,7 +231,59 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Mini-vue/">Mini-vue</a>
+              <a href="/tags/mini-vue/">mini-vue</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.%E5%AE%9E%E7%8E%B0-effect-reactive-%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86-%E8%A7%A6%E5%8F%91%E4%BE%9D%E8%B5%96/" target="_self">
+          1.实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2022/09/19/mini-vue%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/1.%E5%AE%9E%E7%8E%B0-effect-reactive-%E4%BE%9D%E8%B5%96%E6%94%B6%E9%9B%86-%E8%A7%A6%E5%8F%91%E4%BE%9D%E8%B5%96/" target="_self">
+          
+          
+            
+          
+          实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖在本小节呢，我们将实现 effect &amp; reactive &amp; 依赖收集 &amp; 触发依赖
+1. 编写单元测试我们先建一个单元测试：
+12345678910111213141516describe(&quot;effect&quot;, () =&gt; &#123;  it(&quot
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-09-19 18:53" pubdate>
+              2022-09-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/mini-vue/">mini-vue</a>
             
           </div>
         
@@ -256,10 +308,10 @@
           
             
           
-          ES6的相关学习asycn/await 方法
+          ES6 的相关学习asycn/await 方法
 使用同步的方法请求异步接口
 
-123456789101112131415161718const requestLogin = (params) =&gt;&#123;    return new Promise(resolve =&gt;&#123;        resolve(`$&#123;params.username&#125;欢迎你`)  
+123456789101112131415161718const requestLogin = (params) =&gt; &#123;  return new Promise((resolve) =&gt; &#123;    resolve(`$&#123;params.username&#125;欢迎你`);  
         </a>
       </p>
 
@@ -273,11 +325,18 @@
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
+        
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Study/">Study</a>
+              <a href="/tags/ES6/">ES6</a>
             
           </div>
         
@@ -302,8 +361,8 @@
           
             
           
-          Power Apps 使用感想2021年4月因为工作变动，开始使用微软推出的一个低代码开发工具Power Apps,这里分析一下它的优缺点以及我的使用心得。
-什么是Power Platform？Power Platform由Power BI， PowerApps， Power Automate 与 Power Virtual Agents组成。微软一直在不断地将其作为一个整体来推广。这几项服务为管
+          Power Apps 使用感想2021 年 4 月因为工作变动，开始使用微软推出的一个低代码开发工具 Power Apps,这里分析一下它的优缺点以及我的使用心得。
+什么是 Power Platform？Power Platform 由 Power BI， PowerApps， Power Automate 与 Power Virtual Agents 组成。微软一直在不断地将其作为一个整体来推广
         </a>
       </p>
 
@@ -317,11 +376,18 @@
           </div>
         
         
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+            
+          </div>
+        
         
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/Study-notes/">Study notes</a>
+              <a href="/tags/powerApps/">powerApps</a>
             
           </div>
         
